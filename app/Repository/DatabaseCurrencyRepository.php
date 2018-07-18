@@ -8,21 +8,22 @@ class DatabaseCurrencyRepository implements Contracts\CurrencyRepository
 {
     public function add(Currency $currency): Currency
     {
-        // TODO: Implement add() method.
+        $currency->save();
+        return $currency;
     }
 
     public function getById(int $id): ?Currency
     {
-        // TODO: Implement getById() method.
+        return Currency::find($id);
     }
 
     public function getCurrencyByName(string $name): ?Currency
     {
-        // TODO: Implement getCurrencyByName() method.
+        return Currency::where('name', $name)->first();
     }
 
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return Currency::all();
     }
 }

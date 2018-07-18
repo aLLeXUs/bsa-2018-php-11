@@ -8,6 +8,7 @@ class DatabaseTradeRepository implements Contracts\TradeRepository
 {
     public function add(Trade $trade): Trade
     {
-        // TODO: Implement add() method.
+        $trade->save();
+        return $trade;
     }
 }

@@ -8,21 +8,24 @@ class DatabaseLotRepository implements Contracts\LotRepository
 {
     public function add(Lot $lot): Lot
     {
-        // TODO: Implement add() method.
+        $lot->save();
+        return $lot;
     }
 
     public function getById(int $id): ?Lot
     {
-        // TODO: Implement getById() method.
+        return Lot::find($id);
     }
 
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return Lot::all();
     }
 
     public function findActiveLot(int $userId): ?Lot
     {
-        // TODO: Implement findActiveLot() method.
+        return Lot::where('seller_id', $userId)
+            ->whereDate('date_time_open', '>=', \Carbon::now())
+            ->whereDate('date_time_close', '<', \Carbon::now())->first();
     }
 }

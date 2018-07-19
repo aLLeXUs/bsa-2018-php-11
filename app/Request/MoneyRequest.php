@@ -17,16 +17,16 @@ class MoneyRequest implements Contracts\MoneyRequest
 
     public function getWalletId(): int
     {
-        return request()->input('wallet_id');
+        return $this->walletId;
     }
 
     public function getCurrencyId(): int
     {
-        return request()->input('currency_id');
+        return $this->currencyId;
     }
 
     public function getAmount(): float
     {
-        return request()->input('amount');
+        return $this->amount;
     }
 }

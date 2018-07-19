@@ -2,30 +2,32 @@
 
 namespace App\Request;
 
-class AddLotRequest implements Contracts\AddLotRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class AddLotRequest extends FormRequest implements Contracts\AddLotRequest
 {
     public function getCurrencyId(): int
     {
-        // TODO: Implement getCurrencyId() method.
+        return request()->input('currency_id');
     }
 
     public function getSellerId(): int
     {
-        // TODO: Implement getSellerId() method.
+        return request()->input('seller_id');
     }
 
     public function getDateTimeOpen(): int
     {
-        // TODO: Implement getDateTimeOpen() method.
+        return request()->input('date_time_open');
     }
 
     public function getDateTimeClose(): int
     {
-        // TODO: Implement getDateTimeClose() method.
+        return request()->input('date_time_close');
     }
 
     public function getPrice(): float
     {
-        // TODO: Implement getPrice() method.
+        return request()->input('price');
     }
 }

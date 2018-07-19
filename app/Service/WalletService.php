@@ -35,14 +35,24 @@ class WalletService implements Contracts\WalletService
     {
         $money = $this->moneyRepository->findByWalletAndCurrency($moneyRequest->getWalletId(),
             $moneyRequest->getCurrencyId());
+        if (empty($money)) {
+            $money = new Money([
+                'wallet_id' => $moneyRequest->getWalletId(),
+                'currency_id' => $moneyRequest->getCurrencyId(),
+                'amount' => 0,
+            ]);
+        }
         $money->amount += $moneyRequest->getAmount();
-        $this->moneyRepository->save($money);
+        return $this->moneyRepository->save($money);
     }
 
     public function takeMoney(MoneyRequest $moneyRequest): Money
     {
         $money = $this->moneyRepository->findByWalletAndCurrency($moneyRequest->getWalletId(),
             $moneyRequest->getCurrencyId());
-        $money->amount -= $moneyRequest->getAmount();
+        if ($money->amount >= $moneyRequest->getAmount()) {
+            $money->amount -= $moneyRequest->getAmount();
+        }
+        return $money;
     }
 }

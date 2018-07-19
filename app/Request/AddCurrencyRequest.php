@@ -2,10 +2,12 @@
 
 namespace App\Request;
 
-class AddCurrencyRequest implements Contracts\AddCurrencyRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class AddCurrencyRequest extends FormRequest implements Contracts\AddCurrencyRequest
 {
     public function getName(): string
     {
-        // TODO: Implement getName() method.
+        return request()->input('name');
     }
 }

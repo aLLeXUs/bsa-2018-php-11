@@ -2,32 +2,45 @@
 
 namespace App\Request;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class AddLotRequest extends FormRequest implements Contracts\AddLotRequest
+class AddLotRequest implements Contracts\AddLotRequest
 {
+    private $currencyId;
+    private $sellerId;
+    private $dateTimeOpen;
+    private $dateTimeClose;
+    private $price;
+
+    public function __construct(int $currencyId, int $sellerId, int $dateTimeOpen, int $dateTimeClose, float $price)
+    {
+        $this->currencyId = $currencyId;
+        $this->sellerId = $sellerId;
+        $this->dateTimeOpen = $dateTimeOpen;
+        $this->dateTimeClose = $dateTimeClose;
+        $this->price = $price;
+    }
+
     public function getCurrencyId(): int
     {
-        return request()->input('currency_id');
+        return $this->currencyId;
     }
 
     public function getSellerId(): int
     {
-        return request()->input('seller_id');
+        return $this->sellerId;
     }
 
     public function getDateTimeOpen(): int
     {
-        return request()->input('date_time_open');
+        return $this->dateTimeOpen;
     }
 
     public function getDateTimeClose(): int
     {
-        return request()->input('date_time_close');
+        return $this->dateTimeClose;
     }
 
     public function getPrice(): float
     {
-        return request()->input('price');
+        return $this->price;
     }
 }

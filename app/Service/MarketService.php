@@ -23,6 +23,7 @@ use App\Request\Contracts\AddLotRequest;
 use App\Request\Contracts\BuyLotRequest;
 use App\Request\MoneyRequest;
 use App\Response\Contracts\LotResponse;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class MarketService implements Contracts\MarketService
@@ -57,7 +58,7 @@ class MarketService implements Contracts\MarketService
                 throw new ActiveLotExistsException();
             }
         }
-        if ($lotRequest->getDateTimeClose() > $lotRequest->getDateTimeOpen()) {
+        if ($lotRequest->getDateTimeClose() <= $lotRequest->getDateTimeOpen()) {
             throw new IncorrectTimeCloseException();
         }
         if ($lotRequest->getPrice() < 0) {
@@ -66,8 +67,8 @@ class MarketService implements Contracts\MarketService
         $lot = new Lot([
             'currency_id' => $lotRequest->getCurrencyId(),
             'seller_id' => $lotRequest->getSellerId(),
-            'date_time_open' => $lotRequest->getDateTimeOpen(),
-            'date_time_close' => $lotRequest->getDateTimeClose(),
+            'date_time_open' => Carbon::createFromTimestamp($lotRequest->getDateTimeOpen()),
+            'date_time_close' => Carbon::createFromTimestamp($lotRequest->getDateTimeClose()),
             'price' => $lotRequest->getPrice(),
         ]);
         return $this->lotRepository->add($lot);

@@ -2,10 +2,12 @@
 
 namespace App\Request;
 
-class CreateWalletRequest implements Contracts\CreateWalletRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class CreateWalletRequest extends FormRequest implements Contracts\CreateWalletRequest
 {
     public function getUserId(): int
     {
-        // TODO: Implement getUserId() method.
+        return request()->input('user_id');
     }
 }

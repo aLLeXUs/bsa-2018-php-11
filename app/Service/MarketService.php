@@ -64,7 +64,7 @@ class MarketService implements Contracts\MarketService
         $buyerMoney = $this->moneyRepository->findByWalletAndCurrency($buyerWallet->id, $lot->currency_id);
         $sellerMoney = $this->moneyRepository->findByWalletAndCurrency($sellerWallet->id, $lot->currency_id);
         if ($seller->id != $buyer->id &&
-            $lotRequest->getAmount() <= $buyer->amount &&
+            $lotRequest->getAmount() <= $buyerMoney->amount &&
             $lotRequest->getAmount() >= 1) {
             $this->walletService->takeMoney(new MoneyRequest($buyerWallet->id, $lot->currency_id,
                 $lotRequest->getAmount()));

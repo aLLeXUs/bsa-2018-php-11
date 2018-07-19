@@ -2,20 +2,22 @@
 
 namespace App\Request;
 
-class MoneyRequest implements Contracts\MoneyRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class MoneyRequest extends FormRequest implements Contracts\MoneyRequest
 {
     public function getWalletId(): int
     {
-        // TODO: Implement getWalletId() method.
+        return request()->input('wallet_id');
     }
 
     public function getCurrencyId(): int
     {
-        // TODO: Implement getCurrencyId() method.
+        return request()->input('currency_id');
     }
 
     public function getAmount(): float
     {
-        // TODO: Implement getAmount() method.
+        return request()->input('amount');
     }
 }

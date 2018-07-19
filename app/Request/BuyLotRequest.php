@@ -2,22 +2,31 @@
 
 namespace App\Request;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class BuyLotRequest extends FormRequest implements Contracts\BuyLotRequest
+class BuyLotRequest implements Contracts\BuyLotRequest
 {
+    private $userId;
+    private $lotId;
+    private $amount;
+
+    public function __construct(int $userId, int $lotId, float $amount)
+    {
+        $this->userId = $userId;
+        $this->lotId = $lotId;
+        $this->amount = $amount;
+    }
+
     public function getUserId(): int
     {
-        return request()->input('user_id');
+        return $this->userId;
     }
 
     public function getLotId(): int
     {
-        return request()->input('id');
+        return $this->lotId;
     }
 
     public function getAmount(): float
     {
-        return request()->input('amount');
+        return $this->amount;
     }
 }

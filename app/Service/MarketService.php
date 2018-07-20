@@ -81,7 +81,6 @@ class MarketService implements Contracts\MarketService
         $seller = $this->userRepository->getById($lot->seller_id);
         $buyerWallet = $this->walletRepository->findByUser($buyer->id);
         $sellerWallet = $this->walletRepository->findByUser($seller->id);
-        $buyerMoney = $this->moneyRepository->findByWalletAndCurrency($buyerWallet->id, $lot->currency_id);
         $sellerMoney = $this->moneyRepository->findByWalletAndCurrency($sellerWallet->id, $lot->currency_id);
         if ($seller->id != $buyer->id) {
             throw new BuyOwnCurrencyException();
@@ -116,7 +115,7 @@ class MarketService implements Contracts\MarketService
             throw new LotDoesNotExistException();
         }
         $currency = $this->currencyRepository->getById($lot->currency_id);
-        $user = $this->userRepository->getById($lot->user_id);
+        $user = $this->userRepository->getById($lot->seller_id);
         $wallet = $this->walletRepository->findByUser($user->id);
         $money = $this->moneyRepository->findByWalletAndCurrency($wallet->id, $currency->id);
         $response = new \App\Response\LotResponse($lot->id, $user->name, $currency->name,

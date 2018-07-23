@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\MarketException\LotDoesNotExistException;
 use App\Request\Contracts\AddLotRequest;
 use App\Request\Contracts\BuyLotRequest;
 use App\Service\Contracts\MarketService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LotsController extends Controller
 {
@@ -24,16 +26,59 @@ class LotsController extends Controller
 
     public function store(AddLotRequest $request)
     {
-        return response()->json($this->marketService->addLot($request), 201);
+        if (!Auth::check()) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Only authorised users can add lots',
+                    'code' => 403
+                ]
+            ], 403);
+        }
+        try {
+            return response()->json($this->marketService->addLot($request), 201);
+        } catch (\LogicException $exception) {
+            return response()->json([
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'code' => 400
+                ]
+            ], 400);
+        }
     }
 
     public function show($id)
     {
-        return response()->json($this->marketService->getLot($id));
+        try {
+            return response()->json($this->marketService->getLot($id));
+        } catch (LotDoesNotExistException $exception) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Lot does not exist',
+                    'code' => 404
+                ]
+            ], 404);
+        }
     }
 
     public function buy(BuyLotRequest $request)
     {
-        return response()->json($this->marketService->buyLot($request));
+        if (!Auth::check()) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Only authorised users can buy lots',
+                    'code' => 403
+                ]
+            ], 403);
+        }
+        try {
+            return response()->json($this->marketService->buyLot($request), 201);
+        } catch (\LogicException $exception) {
+            return response()->json([
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'code' => 400
+                ]
+            ], 400);
+        }
     }
 }

@@ -20,6 +20,6 @@ class CurrencyService implements Contracts\CurrencyService
         $currency = new Currency([
             'name' => $currencyRequest->getName(),
         ]);
-        $this->currencyRepository->add($currency);
+        return $this->currencyRepository->add($currency);
     }
 }

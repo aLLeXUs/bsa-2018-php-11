@@ -1,0 +1,1 @@
+You buyed lot.

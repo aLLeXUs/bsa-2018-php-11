@@ -13,6 +13,6 @@ class AddCurrencyRequest implements Contracts\AddCurrencyRequest
 
     public function getName(): string
     {
-        return request()->input('name');
+        return $this->name;
     }
 }

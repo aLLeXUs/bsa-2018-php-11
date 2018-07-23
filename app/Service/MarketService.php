@@ -96,7 +96,7 @@ class MarketService implements Contracts\MarketService
         }
         $this->walletService->takeMoney(new MoneyRequest($buyerWallet->id, $lot->currency_id,
             $lotRequest->getAmount()));
-        $this->walletService->addMoney(new MoneyRequest($sellerWallet->id, $lot->currnncy_id,
+        $this->walletService->addMoney(new MoneyRequest($sellerWallet->id, $lot->currency_id,
             $lotRequest->getAmount()));
         $trade = new Trade([
             'lot_id' => $lotRequest->getLotId(),

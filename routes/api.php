@@ -18,8 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function () {
-    Route::post('/lots', 'Api\LotsController@store')->name('addLot');
-    Route::post('/trades', 'Api\LotsController@buy')->name('buyLot');
-    Route::get('/lots/{id}', 'Api\LotsController@show')->name('getLot');
-    Route::get('/lots', 'Api\LotsController@index')->name('getLots');
+    Route::post('/lots', 'Api\v1\LotsController@store')->name('addLot');
+    Route::post('/trades', 'Api\v1\LotsController@buy')->name('buyLot');
+    Route::get('/lots/{id}', 'Api\v1\LotsController@show')->name('getLot');
+    Route::get('/lots', 'Api\v1\LotsController@index')->name('getLots');
 });

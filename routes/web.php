@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/market/lots/add', 'LotsController@create')->middleware('auth')->name('createLot');
+Route::post('/market/lots/add', 'LotsController@store')->middleware('auth')->name('storeLot');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

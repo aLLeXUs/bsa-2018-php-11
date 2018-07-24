@@ -22,7 +22,8 @@ class DatabaseLotRepository implements Contracts\LotRepository
     public function isActiveById(int $id): bool
     {
         $lot = Lot::find($id);
-        if ($lot->date_time_open->lte(Carbon::now()) && $lot->date_time_close->gt(Carbon::now())) {
+        if ($lot->getDateTimeOpen() <= Carbon::now()->getTimestamp() &&
+            $lot->getDateTimeClose() > Carbon::now()->getTimestamp()) {
             return true;
         } else {
             return false;
@@ -37,14 +38,14 @@ class DatabaseLotRepository implements Contracts\LotRepository
     public function findActiveLot(int $userId): ?Lot
     {
         return Lot::where('seller_id', $userId)
-            ->whereDate('date_time_open', '>=', Carbon::now())
-            ->whereDate('date_time_close', '<', Carbon::now())->first();
+            ->whereDate('date_time_open', '<=', Carbon::now())
+            ->whereDate('date_time_close', '>', Carbon::now())->first();
     }
 
     public function findAllActiveLots(int $userId): Collection
     {
         return Lot::where('seller_id', $userId)
-            ->whereDate('date_time_open', '>=', Carbon::now())
-            ->whereDate('date_time_close', '<', Carbon::now())->get();
+            ->whereDate('date_time_open', '<=', Carbon::now())
+            ->whereDate('date_time_close', '>', Carbon::now())->get();
     }
 }

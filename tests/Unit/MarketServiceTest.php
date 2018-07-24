@@ -144,7 +144,7 @@ class MarketServiceTest extends TestCase
     {
         Mail::fake();
 
-        $user = new User([
+        $buyer = new User([
             'id' => 1,
             'name' => 'User1',
             'email' => 'user@example.com',
@@ -163,18 +163,9 @@ class MarketServiceTest extends TestCase
             'name' => 'Bitcoin'
         ]);
 
-        $lot = new Lot([
-            'id' => 1,
-            'currency_id' => $currency->id,
-            'seller_id' => $seller->id,
-            'date_time_open' => Carbon::now(),
-            'date_time_close' => Carbon::tomorrow(),
-            'price' => 4
-        ]);
-
         $buyerWallet = new Wallet([
             'id' => 1,
-            'user_id' => $user->id
+            'user_id' => $buyer->id
         ]);
         $buyerMoney = new Money([
             'id' => 1,
@@ -194,14 +185,24 @@ class MarketServiceTest extends TestCase
             'amount' => 500
         ]);
 
-        $buyLotRequest = new BuyLotRequest($user->id, $lot->id, '2');
+        $lot = new Lot([
+            'id' => 1,
+            'currency_id' => $currency->id,
+            'seller_id' => $seller->id,
+            'date_time_open' => Carbon::now(),
+            'date_time_close' => Carbon::tomorrow(),
+            'price' => 4
+        ]);
+
+        $buyLotRequest = new BuyLotRequest($buyer->id, $lot->id, '2');
         $this->walletRepository->method('findByUser')->will($this->returnValueMap([
             [$seller->id, $sellerWallet],
-            [$user->id, $buyerWallet]
-        ]));
+            [$buyer->id, $buyerWallet]]));
         $this->lotRepository->method('isActiveById')->willReturn(true);
         $this->lotRepository->method('findActiveLot')->willReturn($lot);
-        $this->userRepository->method('getById')->willReturn($seller);
+        $this->userRepository->method('getById')->will($this->returnValueMap([
+            [$seller->id, $seller],
+            [$buyer->id, $buyer]]));
         $this->moneyRepository->method('findByWalletAndCurrency')->willReturn($buyerMoney);
         $trade = $this->marketService->buyLot($buyLotRequest);
         $this->assertInstanceOf(Trade::class, $trade);

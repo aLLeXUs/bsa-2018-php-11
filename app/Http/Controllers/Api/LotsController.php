@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Exceptions\MarketException\LotDoesNotExistException;
-use App\Request\Contracts\AddLotRequest;
-use App\Request\Contracts\BuyLotRequest;
+use App\Request\AddLotRequest;
+use App\Request\BuyLotRequest;
 use App\Service\Contracts\MarketService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,10 +21,23 @@ class LotsController extends Controller
 
     public function index()
     {
-        return response()->json($this->marketService->getLotList());
+        $lotList = $this->marketService->getLotList();
+        $lotResponse = [];
+        foreach ($lotList as $lot) {
+            $lotResponse[] = [
+                'id' => $lot->getId(),
+                'user_name' => $lot->getUserName(),
+                'currency_name' => $lot->getCurrencyName(),
+                'amount' => $lot->getAmount(),
+                'date_time_open' => $lot->getDateTimeOpen(),
+                'date_time_close' => $lot->getDateTimeClose(),
+                'price' => $lot->getPrice()
+            ];
+        }
+        return response()->json($lotResponse);
     }
 
-    public function store(AddLotRequest $request)
+    public function store(Request $request)
     {
         if (!Auth::check()) {
             return response()->json([
@@ -35,7 +48,14 @@ class LotsController extends Controller
             ], 403);
         }
         try {
-            return response()->json($this->marketService->addLot($request), 201);
+            $addLotRequest = new AddLotRequest(
+                (int)$request->input('currency_id'),
+                Auth::id(),
+                (int)$request->input('date_time_open'),
+                (int)$request->input('date_time_close'),
+                (float)$request->input('price')
+            );
+            return response()->json($this->marketService->addLot($addLotRequest), 201);
         } catch (\LogicException $exception) {
             return response()->json([
                 'error' => [
@@ -49,7 +69,16 @@ class LotsController extends Controller
     public function show($id)
     {
         try {
-            return response()->json($this->marketService->getLot($id));
+            $lot = $this->marketService->getLot($id);
+            return response()->json([
+                'id' => $lot->getId(),
+                'user_name' => $lot->getUserName(),
+                'currency_name' => $lot->getCurrencyName(),
+                'amount' => $lot->getAmount(),
+                'date_time_open' => $lot->getDateTimeOpen(),
+                'date_time_close' => $lot->getDateTimeClose(),
+                'price' => $lot->getPrice()
+            ]);
         } catch (LotDoesNotExistException $exception) {
             return response()->json([
                 'error' => [
@@ -60,7 +89,7 @@ class LotsController extends Controller
         }
     }
 
-    public function buy(BuyLotRequest $request)
+    public function buy(Request $request)
     {
         if (!Auth::check()) {
             return response()->json([
@@ -71,11 +100,16 @@ class LotsController extends Controller
             ], 403);
         }
         try {
-            return response()->json($this->marketService->buyLot($request), 201);
+            $buyLotRequest = new BuyLotRequest(
+                Auth::id(),
+                (int)$request->input('lot_id'),
+                (float)$request->input('amount')
+            );
+            return response()->json($this->marketService->buyLot($buyLotRequest), 201);
         } catch (\LogicException $exception) {
             return response()->json([
                 'error' => [
-                    'message' => $exception->getMessage(),
+                    'message' => get_class($exception),
                     'code' => 400
                 ]
             ], 400);

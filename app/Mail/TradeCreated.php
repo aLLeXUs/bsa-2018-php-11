@@ -31,6 +31,6 @@ class TradeCreated extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.buyLot');
+        return $this->view('mail.buy_lot');
     }
 }

@@ -101,6 +101,9 @@ class LotsTest extends TestCase
                 'lot_id' => $lot->id,
                 'amount' => 500
             ]);
+        echo '----------------------';
+        echo $response->content();
+        echo '----------------------';
         $response->assertStatus(201);
     }
 }

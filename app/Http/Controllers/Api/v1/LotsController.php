@@ -99,20 +99,11 @@ class LotsController extends Controller
                 ]
             ], 403);
         }
-        try {
             $buyLotRequest = new BuyLotRequest(
                 Auth::id(),
                 (int)$request->input('lot_id'),
                 (float)$request->input('amount')
             );
             return response()->json($this->marketService->buyLot($buyLotRequest), 201);
-        } catch (\LogicException $exception) {
-            return response()->json([
-                'error' => [
-                    'message' => get_class($exception),
-                    'code' => 400
-                ]
-            ], 400);
-        }
     }
 }
